@@ -60,3 +60,21 @@ print(f"Zeros: {tf.zeros([2, 3])}")
 print(f"Ones: {tf.ones([2, 3])}")
 print(f"Identity: {tf.eye(3)}")
 print(f"Random: {tf.random.normal([2, 3])}")
+# ========================================
+# PART 2: BUILD A SIMPLE NEURAL NETWORK
+# ========================================
+
+print("\n" + "="*50)
+print("PART 2: BUILD A SIMPLE NEURAL NETWORK")
+print("="*50)
+
+# Create a simple model
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(8, activation='relu', input_shape=(1,)),
+    tf.keras.layers.Dense(8, activation='relu'),
+    tf.keras.layers.Dense(1)
+])
+
+print("✅ Model created!")
+print(model.summary())
+
