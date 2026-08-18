@@ -370,3 +370,68 @@ test_input = np.random.randn(1, 10)
 prediction = custom_model.predict(test_input)
 print(f"Prediction: {prediction[0][0]:.4f}")
 print(f"Sum of inputs: {np.sum(test_input):.4f}")
+# ========================================
+# PART 9: VISUALIZATION SUMMARY
+# ========================================
+
+print("\n" + "="*50)
+print("PART 9: TRAINING HISTORY VISUALIZATION")
+print("="*50)
+
+# Create comparison visualization
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+fig.suptitle('Model Training Comparison', fontsize=14, fontweight='bold')
+
+# Linear Regression
+axes[0, 0].plot(history_lr.history['loss'], color='blue')
+axes[0, 0].set_title('Linear Regression - Loss')
+axes[0, 0].set_xlabel('Epoch')
+axes[0, 0].set_ylabel('Loss')
+axes[0, 0].grid(True, alpha=0.3)
+
+# Classification
+axes[0, 1].plot(history_cls.history['accuracy'], label='Train', color='blue')
+axes[0, 1].plot(history_cls.history['val_accuracy'], label='Validation', color='orange')
+axes[0, 1].set_title('Classification - Accuracy')
+axes[0, 1].set_xlabel('Epoch')
+axes[0, 1].set_ylabel('Accuracy')
+axes[0, 1].legend()
+axes[0, 1].grid(True, alpha=0.3)
+
+# MNIST
+axes[1, 0].plot(history_mnist.history['accuracy'], label='Train', color='blue')
+axes[1, 0].plot(history_mnist.history['val_accuracy'], label='Validation', color='orange')
+axes[1, 0].set_title('MNIST - Accuracy')
+axes[1, 0].set_xlabel('Epoch')
+axes[1, 0].set_ylabel('Accuracy')
+axes[1, 0].legend()
+axes[1, 0].grid(True, alpha=0.3)
+
+# Comparison
+models = ['Linear', 'Classification', 'MNIST']
+accuracies = [
+    history_lr.history['loss'][-1],
+    history_cls.history['accuracy'][-1],
+    history_mnist.history['accuracy'][-1]
+]
+axes[1, 1].bar(models, accuracies, color=['blue', 'green', 'orange'])
+axes[1, 1].set_title('Model Performance Comparison')
+axes[1, 1].set_ylabel('Score')
+axes[1, 1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+
+print("\n" + "="*50)
+print("🎉 YOU'VE SUCCESSFULLY BUILT YOUR FIRST TF MODELS!")
+print("="*50)
+
+print("\n📚 What You Learned:")
+print("   ✅ TensorFlow basics (tensors, operations)")
+print("   ✅ Building sequential models")
+print("   ✅ Linear regression with TF")
+print("   ✅ Classification with TF")
+print("   ✅ MNIST digit classification")
+print("   ✅ Saving and loading models")
+print("   ✅ Making predictions")
+print("   ✅ Custom models")
