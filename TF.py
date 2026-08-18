@@ -77,4 +77,51 @@ model = tf.keras.Sequential([
 
 print("✅ Model created!")
 print(model.summary())
+# ========================================
+# PART 3: LINEAR REGRESSION WITH TF
+# ========================================
+
+print("\n" + "="*50)
+print("PART 3: LINEAR REGRESSION WITH TF")
+print("="*50)
+
+# Create data
+np.random.seed(42)
+X = np.linspace(0, 10, 100)
+y = 2 * X + 3 + np.random.normal(0, 0.5, 100)
+
+print("📊 Data created: 100 samples")
+
+# Build model
+model_lr = tf.keras.Sequential([
+    tf.keras.layers.Dense(1, input_shape=(1,))
+])
+
+model_lr.compile(optimizer='adam', loss='mse')
+print(f"Model: {model_lr.summary()}")
+
+# Train model
+print("\n🎯 Training Linear Regression...")
+history_lr = model_lr.fit(
+    X, y, 
+    epochs=100, 
+    verbose=0
+)
+
+print("✅ Training complete!")
+print(f"Loss: {history_lr.history['loss'][-1]:.4f}")
+
+# Make predictions
+predictions = model_lr.predict(X)
+
+# Visualize
+plt.figure(figsize=(10, 5))
+plt.scatter(X, y, alpha=0.5, label='Data')
+plt.plot(X, predictions, color='red', linewidth=2, label='Prediction')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.title('Linear Regression with TensorFlow')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()
 
