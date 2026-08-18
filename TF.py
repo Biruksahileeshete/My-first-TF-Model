@@ -298,4 +298,31 @@ test_y = loaded_model.predict(test_x)
 print(f"Prediction for x=5: {test_y[0][0]:.2f} (Expected: ~13)")
 
 print("\n✅ All models built and saved successfully!")
+# ========================================
+# PART 7: MAKE PREDICTIONS
+# ========================================
 
+print("\n" + "="*50)
+print("PART 7: MAKE PREDICTIONS")
+print("="*50)
+
+# Predict with linear model
+x_new = np.linspace(0, 10, 10)
+y_new = model_lr.predict(x_new)
+
+print("📊 Linear Regression Predictions:")
+for x, y in zip(x_new, y_new):
+    print(f"   X: {x:.1f} -> y: {y[0]:.2f}")
+
+# Predict with classification model
+print("\n🎯 Classification Predictions (first 5):")
+for i in range(5):
+    pred = model_cls.predict(X_test[i].reshape(1, -1), verbose=0)
+    pred_class = 1 if pred > 0.5 else 0
+    print(f"   Sample {i+1}: Predicted={pred_class}, Actual={y_test[i]}")
+
+# Predict with MNIST model
+print("\n🔢 MNIST Predictions (first 5):")
+for i in range(5):
+    pred = model_mnist.predict(X_test_mnist[i].reshape(1, -1), verbose=0)
+    print(f"   Sample {i+1}: Predicted={np.argmax(pred)}, Actual={y_test_mnist[i]}")
