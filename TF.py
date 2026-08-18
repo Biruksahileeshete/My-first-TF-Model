@@ -269,4 +269,33 @@ for i, idx in enumerate(indices):
 
 plt.tight_layout()
 plt.show()
+# ========================================
+# PART 6: SAVE AND LOAD MODEL
+# ========================================
+
+print("\n" + "="*50)
+print("PART 6: SAVE AND LOAD MODEL")
+print("="*50)
+
+# Save model
+model_lr.save('linear_regression_model.h5')
+model_cls.save('classification_model.h5')
+model_mnist.save('mnist_model.h5')
+
+print("✅ Models saved successfully!")
+print("Files created:")
+print("   - linear_regression_model.h5")
+print("   - classification_model.h5")
+print("   - mnist_model.h5")
+
+# Load model
+loaded_model = tf.keras.models.load_model('linear_regression_model.h5')
+print("✅ Model loaded successfully!")
+
+# Test loaded model
+test_x = np.array([[5.0]])
+test_y = loaded_model.predict(test_x)
+print(f"Prediction for x=5: {test_y[0][0]:.2f} (Expected: ~13)")
+
+print("\n✅ All models built and saved successfully!")
 
