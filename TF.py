@@ -200,4 +200,73 @@ axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.show()
+# ========================================
+# PART 5: MULTI-CLASS CLASSIFICATION (MNIST)
+# ========================================
+
+print("\n" + "="*50)
+print("PART 5: MNIST DIGIT CLASSIFICATION")
+print("="*50)
+
+# Load MNIST dataset
+mnist = tf.keras.datasets.mnist
+(X_train_mnist, y_train_mnist), (X_test_mnist, y_test_mnist) = mnist.load_data()
+
+print(f"📊 MNIST Dataset:")
+print(f"   Training samples: {len(X_train_mnist)}")
+print(f"   Testing samples: {len(X_test_mnist)}")
+print(f"   Image shape: {X_train_mnist[0].shape}")
+
+# Normalize data
+X_train_mnist = X_train_mnist / 255.0
+X_test_mnist = X_test_mnist / 255.0
+
+# Reshape for model
+X_train_mnist = X_train_mnist.reshape(-1, 28*28)
+X_test_mnist = X_test_mnist.reshape(-1, 28*28)
+
+print("✅ Data preprocessed!")
+
+# Build MNIST model
+model_mnist = tf.keras.Sequential([
+    tf.keras.layers.Dense(128, activation='relu', input_shape=(784,)),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+model_mnist.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+print("\n🎯 Training MNIST Model...")
+history_mnist = model_mnist.fit(
+    X_train_mnist, y_train_mnist,
+    epochs=5,
+    validation_data=(X_test_mnist, y_test_mnist),
+    verbose=0
+)
+
+print("✅ Training complete!")
+print(f"Train Accuracy: {history_mnist.history['accuracy'][-1]:.4f}")
+print(f"Test Accuracy: {history_mnist.history['val_accuracy'][-1]:.4f}")
+
+# Visualize
+fig, axes = plt.subplots(2, 2, figsize=(10, 10))
+
+# Show sample predictions
+indices = np.random.choice(len(X_test_mnist), 4, replace=False)
+
+for i, idx in enumerate(indices):
+    row = i // 2
+    col = i % 2
+    axes[row, col].imshow(X_test_mnist[idx].reshape(28, 28), cmap='gray')
+    pred = model_mnist.predict(X_test_mnist[idx].reshape(1, -1), verbose=0)
+    axes[row, col].set_title(f'Predicted: {np.argmax(pred)}')
+    axes[row, col].axis('off')
+
+plt.tight_layout()
+plt.show()
 
