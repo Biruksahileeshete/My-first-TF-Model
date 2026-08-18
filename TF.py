@@ -124,4 +124,80 @@ plt.title('Linear Regression with TensorFlow')
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.show()
+# ========================================
+# PART 4: CLASSIFICATION WITH TF
+# ========================================
+
+print("\n" + "="*50)
+print("PART 4: CLASSIFICATION WITH TF")
+print("="*50)
+
+# Create classification data
+from sklearn.datasets import make_classification
+
+X_cls, y_cls = make_classification(
+    n_samples=500,
+    n_features=2,
+    n_informative=2,
+    n_redundant=0,
+    n_clusters_per_class=1,
+    random_state=42
+)
+
+print(f"📊 Classification data: {len(X_cls)} samples, {X_cls.shape[1]} features")
+
+# Split data
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+    X_cls, y_cls, test_size=0.2, random_state=42
+)
+
+# Build classification model
+model_cls = tf.keras.Sequential([
+    tf.keras.layers.Dense(16, activation='relu', input_shape=(2,)),
+    tf.keras.layers.Dense(16, activation='relu'),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+
+model_cls.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+
+print("\n🎯 Training Classification Model...")
+history_cls = model_cls.fit(
+    X_train, y_train,
+    epochs=100,
+    validation_data=(X_test, y_test),
+    verbose=0
+)
+
+print("✅ Training complete!")
+print(f"Train Accuracy: {history_cls.history['accuracy'][-1]:.4f}")
+print(f"Test Accuracy: {history_cls.history['val_accuracy'][-1]:.4f}")
+
+# Visualize
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+# Loss
+axes[0].plot(history_cls.history['loss'], label='Training Loss')
+axes[0].plot(history_cls.history['val_loss'], label='Validation Loss')
+axes[0].set_title('Loss')
+axes[0].set_xlabel('Epoch')
+axes[0].set_ylabel('Loss')
+axes[0].legend()
+axes[0].grid(True, alpha=0.3)
+
+# Accuracy
+axes[1].plot(history_cls.history['accuracy'], label='Training Accuracy')
+axes[1].plot(history_cls.history['val_accuracy'], label='Validation Accuracy')
+axes[1].set_title('Accuracy')
+axes[1].set_xlabel('Epoch')
+axes[1].set_ylabel('Accuracy')
+axes[1].legend()
+axes[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
 
