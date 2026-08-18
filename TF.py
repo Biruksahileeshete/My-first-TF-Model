@@ -326,3 +326,47 @@ print("\n🔢 MNIST Predictions (first 5):")
 for i in range(5):
     pred = model_mnist.predict(X_test_mnist[i].reshape(1, -1), verbose=0)
     print(f"   Sample {i+1}: Predicted={np.argmax(pred)}, Actual={y_test_mnist[i]}")
+# ========================================
+# PART 8: CUSTOM NEURAL NETWORK
+# ========================================
+
+print("\n" + "="*50)
+print("PART 8: CUSTOM NEURAL NETWORK WITH MULTIPLE LAYERS")
+print("="*50)
+
+class MyModel(tf.keras.Model):
+    def __init__(self):
+        super(MyModel, self).__init__()
+        self.dense1 = tf.keras.layers.Dense(64, activation='relu')
+        self.dense2 = tf.keras.layers.Dense(32, activation='relu')
+        self.dense3 = tf.keras.layers.Dense(1)
+    
+    def call(self, inputs):
+        x = self.dense1(inputs)
+        x = self.dense2(x)
+        return self.dense3(x)
+
+# Create and compile custom model
+custom_model = MyModel()
+custom_model.compile(optimizer='adam', loss='mse')
+
+print("✅ Custom model created!")
+print(custom_model.summary())
+
+# Train with data
+X_train_custom = np.random.randn(100, 10)
+y_train_custom = np.sum(X_train_custom, axis=1) + np.random.normal(0, 0.1, 100)
+
+custom_model.fit(
+    X_train_custom, y_train_custom,
+    epochs=50,
+    verbose=0
+)
+
+print("✅ Custom model trained!")
+
+# Test prediction
+test_input = np.random.randn(1, 10)
+prediction = custom_model.predict(test_input)
+print(f"Prediction: {prediction[0][0]:.4f}")
+print(f"Sum of inputs: {np.sum(test_input):.4f}")
