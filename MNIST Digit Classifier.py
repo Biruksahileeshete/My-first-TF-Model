@@ -369,3 +369,96 @@ if len(misclassified_idx) > 0:
     plt.show()
 else:
     print("🎉 All predictions are correct!")
+# ========================================
+# PART 12: SAVE MODELS
+# ========================================
+
+print("\n" + "="*50)
+print("PART 12: SAVING MODELS")
+print("="*50)
+
+# Save models
+model_simple.save('mnist_simple_model.h5')
+model_deep.save('mnist_deep_model.h5')
+
+print("✅ Models saved successfully!")
+print("   - mnist_simple_model.h5")
+print("   - mnist_deep_model.h5")
+
+# ========================================
+# PART 13: INTERACTIVE PREDICTION
+# ========================================
+
+print("\n" + "="*50)
+print("PART 13: INTERACTIVE PREDICTION")
+print("="*50)
+
+def predict_digit(model, X_data, y_data, sample_idx):
+    """Predict a specific digit"""
+    sample = X_data[sample_idx].reshape(1, -1)
+    prediction = model.predict(sample, verbose=0)
+    digit = np.argmax(prediction)
+    confidence = np.max(prediction)
+    
+    fig, ax = plt.subplots(1, 2, figsize=(8, 4))
+    
+    # Show image
+    ax[0].imshow(X_data[sample_idx].reshape(28, 28), cmap='gray')
+    ax[0].set_title(f'Digit: {y_data[sample_idx]}')
+    ax[0].axis('off')
+    
+    # Show prediction probabilities
+    ax[1].bar(range(10), prediction[0], color='skyblue')
+    ax[1].set_title(f'Prediction: {digit} (Confidence: {confidence:.2f})')
+    ax[1].set_xlabel('Digit')
+    ax[1].set_ylabel('Probability')
+    ax[1].set_xticks(range(10))
+    ax[1].grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    plt.show()
+    
+    return digit, confidence
+
+# Test interactive prediction
+print("🔍 Example Predictions:")
+test_indices = np.random.choice(len(X_test), 5, replace=False)
+for idx in test_indices:
+    print(f"\nIndex: {idx}")
+    digit, confidence = predict_digit(model_deep, X_test, y_test, idx)
+
+# ========================================
+# FINAL SUMMARY
+# ========================================
+
+print("\n" + "="*50)
+print("🎉 MNIST DIGIT CLASSIFIER COMPLETE!")
+print("="*50)
+
+print("\n📊 Final Results:")
+print(f"   Simple Model Accuracy: {test_acc_simple*100:.2f}%")
+print(f"   Deep Model Accuracy: {test_acc_deep*100:.2f}%")
+print(f"   Improvement: {((test_acc_deep - test_acc_simple)*100):.2f}%")
+
+print("\n📚 What You Learned:")
+print("   ✅ Loading and exploring MNIST dataset")
+print("   ✅ Data preprocessing (normalization, reshaping)")
+print("   ✅ Building neural networks with TensorFlow")
+print("   ✅ Training models with different architectures")
+print("   ✅ Evaluating model performance")
+print("   ✅ Visualizing predictions and mistakes")
+print("   ✅ Saving and loading models")
+print("   ✅ Making predictions on new data")
+
+print("\n🔧 Model Architectures:")
+print("   Simple: 2 layers (784 → 128 → 10)")
+print("   Deep: 4 layers with dropout (784 → 256 → 128 → 64 → 10)")
+
+print("\n🎯 Next Steps:")
+print("   • Add more layers or neurons")
+print("   • Try different activation functions")
+print("   • Experiment with hyperparameters")
+print("   • Use data augmentation")
+print("   • Build a CNN (Convolutional Neural Network)")
+
+print("\n✅ Congratulations! You've built a digit classifier! 🚀")
