@@ -81,3 +81,106 @@ axes[1].axis('off')
 
 plt.tight_layout()
 plt.show()
+# ========================================
+# PART 3: PREPROCESS DATA
+# ========================================
+
+print("\n" + "="*50)
+print("PART 3: PREPROCESSING DATA")
+print("="*50)
+
+# Normalize pixel values (0-255 -> 0-1)
+X_train = X_train / 255.0
+X_test = X_test / 255.0
+
+print("✅ Pixel values normalized (0-1)")
+
+# Reshape for neural network
+X_train_flat = X_train.reshape(-1, 28*28)
+X_test_flat = X_test.reshape(-1, 28*28)
+
+print(f"✅ Data reshaped for neural network:")
+print(f"   Training: {X_train_flat.shape}")
+print(f"   Testing: {X_test_flat.shape}")
+
+# One-hot encode labels (optional but good practice)
+y_train_onehot = tf.keras.utils.to_categorical(y_train, 10)
+y_test_onehot = tf.keras.utils.to_categorical(y_test, 10)
+
+print(f"✅ Labels one-hot encoded: {y_train_onehot[0]}")
+
+# ========================================
+# PART 4: BUILD NEURAL NETWORK
+# ========================================
+
+print("\n" + "="*50)
+print("PART 4: BUILDING NEURAL NETWORK")
+print("="*50)
+
+# Model 1: Simple 2-layer network
+model_simple = tf.keras.Sequential([
+    tf.keras.layers.Dense(128, activation='relu', input_shape=(784,)),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+print("🔧 Simple Model (2 layers):")
+model_simple.summary()
+
+# Model 2: Deep network with dropout
+model_deep = tf.keras.Sequential([
+    tf.keras.layers.Dense(256, activation='relu', input_shape=(784,)),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+print("\n🔧 Deep Model (with dropout):")
+model_deep.summary()
+
+# ========================================
+# PART 5: COMPILE AND TRAIN MODELS
+# ========================================
+
+print("\n" + "="*50)
+print("PART 5: TRAINING MODELS")
+print("="*50)
+
+# Compile simple model
+model_simple.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Train simple model
+print("\n🎯 Training Simple Model...")
+history_simple = model_simple.fit(
+    X_train_flat, y_train_onehot,
+    epochs=10,
+    batch_size=32,
+    validation_split=0.2,
+    verbose=1
+)
+
+print("\n✅ Simple Model Training Complete!")
+
+# Compile deep model
+model_deep.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Train deep model
+print("\n🎯 Training Deep Model...")
+history_deep = model_deep.fit(
+    X_train_flat, y_train_onehot,
+    epochs=10,
+    batch_size=32,
+    validation_split=0.2,
+    verbose=1
+)
+
+print("\n✅ Deep Model Training Complete!")
