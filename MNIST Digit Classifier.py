@@ -240,3 +240,51 @@ axes[1].set_ylabel('Actual')
 
 plt.tight_layout()
 plt.show()
+# ========================================
+# PART 8: CLASSIFICATION REPORT
+# ========================================
+
+print("\n📊 Classification Report - Simple Model:")
+print(classification_report(y_test, y_pred_simple_classes, digits=3))
+
+print("\n📊 Classification Report - Deep Model:")
+print(classification_report(y_test, y_pred_deep_classes, digits=3))
+
+# ========================================
+# PART 9: VISUALIZE PREDICTIONS
+# ========================================
+
+print("\n" + "="*50)
+print("PART 9: VISUALIZING PREDICTIONS")
+print("="*50)
+
+# Sample predictions
+def show_predictions(model, X, y_true, n_samples=10):
+    """Show sample predictions with confidence"""
+    predictions = model.predict(X[:n_samples])
+    pred_classes = np.argmax(predictions, axis=1)
+    confidences = np.max(predictions, axis=1)
+    
+    fig, axes = plt.subplots(2, 5, figsize=(15, 6))
+    fig.suptitle('Model Predictions with Confidence', fontsize=16, fontweight='bold')
+    
+    for i, ax in enumerate(axes.flat):
+        # Show image
+        ax.imshow(X[i].reshape(28, 28), cmap='gray')
+        
+        # Color based on correct/incorrect
+        color = 'green' if pred_classes[i] == y_true[i] else 'red'
+        
+        # Show prediction info
+        ax.set_title(f'Pred: {pred_classes[i]}\nConf: {confidences[i]:.2f}\nTrue: {y_true[i]}', 
+                    color=color, fontsize=10)
+        ax.axis('off')
+    
+    plt.tight_layout()
+    plt.show()
+
+print("🔍 Sample Predictions from Simple Model:")
+show_predictions(model_simple, X_test_flat, y_test)
+
+print("🔍 Sample Predictions from Deep Model:")
+show_predictions(model_deep, X_test_flat, y_test)
