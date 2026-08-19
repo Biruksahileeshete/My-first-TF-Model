@@ -288,3 +288,84 @@ show_predictions(model_simple, X_test_flat, y_test)
 
 print("🔍 Sample Predictions from Deep Model:")
 show_predictions(model_deep, X_test_flat, y_test)
+# ========================================
+# PART 10: TRAINING HISTORY VISUALIZATION
+# ========================================
+
+print("\n" + "="*50)
+print("PART 10: TRAINING HISTORY")
+print("="*50)
+
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+fig.suptitle('Training History Comparison', fontsize=16, fontweight='bold')
+
+# Simple model - Loss
+axes[0, 0].plot(history_simple.history['loss'], label='Training')
+axes[0, 0].plot(history_simple.history['val_loss'], label='Validation')
+axes[0, 0].set_title('Simple Model - Loss')
+axes[0, 0].set_xlabel('Epoch')
+axes[0, 0].set_ylabel('Loss')
+axes[0, 0].legend()
+axes[0, 0].grid(True, alpha=0.3)
+
+# Simple model - Accuracy
+axes[0, 1].plot(history_simple.history['accuracy'], label='Training')
+axes[0, 1].plot(history_simple.history['val_accuracy'], label='Validation')
+axes[0, 1].set_title('Simple Model - Accuracy')
+axes[0, 1].set_xlabel('Epoch')
+axes[0, 1].set_ylabel('Accuracy')
+axes[0, 1].legend()
+axes[0, 1].grid(True, alpha=0.3)
+
+# Deep model - Loss
+axes[1, 0].plot(history_deep.history['loss'], label='Training')
+axes[1, 0].plot(history_deep.history['val_loss'], label='Validation')
+axes[1, 0].set_title('Deep Model - Loss')
+axes[1, 0].set_xlabel('Epoch')
+axes[1, 0].set_ylabel('Loss')
+axes[1, 0].legend()
+axes[1, 0].grid(True, alpha=0.3)
+
+# Deep model - Accuracy
+axes[1, 1].plot(history_deep.history['accuracy'], label='Training')
+axes[1, 1].plot(history_deep.history['val_accuracy'], label='Validation')
+axes[1, 1].set_title('Deep Model - Accuracy')
+axes[1, 1].set_xlabel('Epoch')
+axes[1, 1].set_ylabel('Accuracy')
+axes[1, 1].legend()
+axes[1, 1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+
+# ========================================
+# PART 11: MISCLASSIFIED EXAMPLES
+# ========================================
+
+print("\n" + "="*50)
+print("PART 11: MISCLASSIFIED EXAMPLES")
+print("="*50)
+
+# Find misclassified examples
+misclassified_idx = np.where(y_test != y_pred_deep_classes)[0]
+
+if len(misclassified_idx) > 0:
+    print(f"📊 Misclassified samples: {len(misclassified_idx)}/{len(y_test)} ({len(misclassified_idx)/len(y_test)*100:.2f}%)")
+    
+    # Show some misclassified examples
+    fig, axes = plt.subplots(2, 5, figsize=(15, 6))
+    fig.suptitle('Misclassified Examples (Deep Model)', fontsize=16, fontweight='bold')
+    
+    for i, ax in enumerate(axes.flat):
+        if i < len(misclassified_idx) and i < 10:
+            idx = misclassified_idx[i]
+            ax.imshow(X_test[idx].reshape(28, 28), cmap='gray')
+            ax.set_title(f'Pred: {y_pred_deep_classes[idx]}\nActual: {y_test[idx]}', color='red')
+            ax.axis('off')
+        else:
+            ax.axis('off')
+    
+    plt.tight_layout()
+    plt.show()
+else:
+    print("🎉 All predictions are correct!")
