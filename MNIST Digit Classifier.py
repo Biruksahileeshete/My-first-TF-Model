@@ -460,5 +460,4 @@ print("   • Try different activation functions")
 print("   • Experiment with hyperparameters")
 print("   • Use data augmentation")
 print("   • Build a CNN (Convolutional Neural Network)")
-
 print("\n✅ Congratulations! You've built a digit classifier! 🚀")
