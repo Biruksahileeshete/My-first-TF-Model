@@ -184,3 +184,59 @@ history_deep = model_deep.fit(
 )
 
 print("\n✅ Deep Model Training Complete!")
+# ========================================
+# PART 6: EVALUATE MODELS
+# ========================================
+
+print("\n" + "="*50)
+print("PART 6: EVALUATING MODELS")
+print("="*50)
+
+# Evaluate simple model
+test_loss_simple, test_acc_simple = model_simple.evaluate(
+    X_test_flat, y_test_onehot, verbose=0
+)
+
+# Evaluate deep model
+test_loss_deep, test_acc_deep = model_deep.evaluate(
+    X_test_flat, y_test_onehot, verbose=0
+)
+
+print("\n📊 Model Performance on Test Data:")
+print(f"Simple Model - Loss: {test_loss_simple:.4f}, Accuracy: {test_acc_simple:.4f} ({test_acc_simple*100:.2f}%)")
+print(f"Deep Model   - Loss: {test_loss_deep:.4f}, Accuracy: {test_acc_deep:.4f} ({test_acc_deep*100:.2f}%)")
+
+# Make predictions
+y_pred_simple = model_simple.predict(X_test_flat)
+y_pred_simple_classes = np.argmax(y_pred_simple, axis=1)
+
+y_pred_deep = model_deep.predict(X_test_flat)
+y_pred_deep_classes = np.argmax(y_pred_deep, axis=1)
+
+# ========================================
+# PART 7: CONFUSION MATRIX
+# ========================================
+
+print("\n" + "="*50)
+print("PART 7: CONFUSION MATRIX")
+print("="*50)
+
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+fig.suptitle('Confusion Matrices', fontsize=16, fontweight='bold')
+
+# Confusion matrix for simple model
+cm_simple = confusion_matrix(y_test, y_pred_simple_classes)
+sns.heatmap(cm_simple, annot=True, fmt='d', cmap='Blues', ax=axes[0])
+axes[0].set_title('Simple Model')
+axes[0].set_xlabel('Predicted')
+axes[0].set_ylabel('Actual')
+
+# Confusion matrix for deep model
+cm_deep = confusion_matrix(y_test, y_pred_deep_classes)
+sns.heatmap(cm_deep, annot=True, fmt='d', cmap='Greens', ax=axes[1])
+axes[1].set_title('Deep Model')
+axes[1].set_xlabel('Predicted')
+axes[1].set_ylabel('Actual')
+
+plt.tight_layout()
+plt.show()
