@@ -284,3 +284,75 @@ for i, (ax, activation) in enumerate(zip(axes.flat, activations)):
 
 plt.tight_layout()
 plt.show()
+# ========================================
+# PART 11: SHOW PREDICTIONS
+# ========================================
+
+print("\n" + "="*50)
+print("PART 11: SAMPLE PREDICTIONS")
+print("="*50)
+
+def show_predictions(model, X, y, n_samples=12):
+    """Show sample predictions with confidence"""
+    predictions = model.predict(X[:n_samples])
+    pred_classes = np.argmax(predictions, axis=1)
+    confidences = np.max(predictions, axis=1)
+    
+    fig, axes = plt.subplots(3, 4, figsize=(12, 9))
+    fig.suptitle('CNN Predictions', fontsize=14, fontweight='bold')
+    
+    for i, ax in enumerate(axes.flat):
+        if i < n_samples:
+            # Show image
+            ax.imshow(X[i].reshape(28, 28), cmap='gray')
+            
+            # Color based on correct/incorrect
+            color = 'green' if pred_classes[i] == y[i] else 'red'
+            
+            # Show prediction info
+            ax.set_title(f'Pred: {pred_classes[i]}\nConf: {confidences[i]:.2f}\nTrue: {y[i]}', 
+                        color=color, fontsize=10)
+            ax.axis('off')
+    
+    plt.tight_layout()
+    plt.show()
+
+print("🔍 Sample Predictions:")
+show_predictions(model, X_test_cnn, y_test)
+
+# ========================================
+# PART 12: MISCLASSIFIED EXAMPLES
+# ========================================
+
+print("\n" + "="*50)
+print("PART 12: MISCLASSIFIED EXAMPLES")
+print("="*50)
+
+# Find misclassified examples
+misclassified_idx = np.where(y_test != y_pred_classes)[0]
+misclassified_count = len(misclassified_idx)
+
+print(f"📊 Misclassified samples: {misclassified_count}/{len(y_test)} ({misclassified_count/len(y_test)*100:.2f}%)")
+
+if misclassified_count > 0:
+    # Show misclassified examples
+    fig, axes = plt.subplots(2, 5, figsize=(15, 6))
+    fig.suptitle('Misclassified Examples', fontsize=14, fontweight='bold')
+    
+    for i, ax in enumerate(axes.flat):
+        if i < 10 and i < misclassified_count:
+            idx = misclassified_idx[i]
+            ax.imshow(X_test[idx].reshape(28, 28), cmap='gray')
+            
+            # Show prediction vs actual
+            pred_probs = y_pred[idx]
+            confidence = np.max(pred_probs)
+            
+            ax.set_title(f'Pred: {y_pred_classes[idx]}\nActual: {y_test[idx]}\nConf: {confidence:.2f}', 
+                        color='red')
+            ax.axis('off')
+        else:
+            ax.axis('off')
+    
+    plt.tight_layout()
+    plt.show()
