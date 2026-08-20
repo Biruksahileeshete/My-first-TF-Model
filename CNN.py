@@ -404,3 +404,114 @@ print(f"{'Training Time':<20} {training_time:.1f}s{'':10} {time.time() - start_t
 improvement = ((test_accuracy - ann_accuracy) / ann_accuracy) * 100
 print(f"\n📈 CNN is {improvement:.1f}% more accurate than ANN!")
 print("✅ CNN performs better because it understands spatial patterns!")
+# ========================================
+# PART 14: SAVE MODEL
+# ========================================
+
+print("\n" + "="*50)
+print("PART 14: SAVING MODEL")
+print("="*50)
+
+# Save models
+model.save('cnn_mnist_model.h5')
+ann_model.save('ann_mnist_model.h5')
+
+print("✅ Models saved successfully!")
+print("   - cnn_mnist_model.h5")
+print("   - ann_mnist_model.h5")
+
+print("\n📂 To load the model:")
+print("   loaded_model = tf.keras.models.load_model('cnn_mnist_model.h5')")
+
+# ========================================
+# PART 15: PREDICT CUSTOM IMAGE
+# ========================================
+
+print("\n" + "="*50)
+print("PART 15: PREDICT CUSTOM IMAGE")
+print("="*50)
+
+def predict_custom_digit(model, image):
+    """Predict a single digit from a 28x28 image"""
+    # Reshape for model
+    image = image.reshape(1, 28, 28, 1)
+    
+    # Make prediction
+    prediction = model.predict(image, verbose=0)
+    digit = np.argmax(prediction)
+    confidence = np.max(prediction)
+    
+    return digit, confidence, prediction[0]
+
+# Test on a random image
+test_idx = np.random.randint(0, len(X_test))
+digit, confidence, probs = predict_custom_digit(model, X_test[test_idx])
+
+print(f"\n🎯 Test Image {test_idx}:")
+print(f"   True Digit: {y_test[test_idx]}")
+print(f"   Predicted Digit: {digit}")
+print(f"   Confidence: {confidence:.2f}")
+
+# Show prediction probabilities
+fig, ax = plt.subplots(1, 2, figsize=(8, 4))
+
+# Show image
+ax[0].imshow(X_test[test_idx], cmap='gray')
+ax[0].set_title(f'True: {y_test[test_idx]}')
+ax[0].axis('off')
+
+# Show probabilities
+ax[1].bar(range(10), probs, color='skyblue')
+ax[1].axhline(y=0.1, color='red', linestyle='--', alpha=0.5)
+ax[1].set_title(f'Predicted: {digit} (Confidence: {confidence:.2f})')
+ax[1].set_xlabel('Digit')
+ax[1].set_ylabel('Probability')
+ax[1].set_xticks(range(10))
+ax[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+
+# ========================================
+# FINAL SUMMARY
+# ========================================
+
+print("\n" + "="*50)
+print("🎉 CNN IMAGE CLASSIFIER COMPLETE!")
+print("="*50)
+
+print("\n📊 Final Results:")
+print(f"   Model: CNN for MNIST")
+print(f"   Test Accuracy: {test_accuracy*100:.2f}%")
+print(f"   Training Time: {training_time:.1f} seconds")
+print(f"   Parameters: {model.count_params():,}")
+
+print("\n📚 What You Learned:")
+print("   ✅ CNN architecture (Conv2D, MaxPooling, Flatten)")
+print("   ✅ Data preprocessing for CNN")
+print("   ✅ Training CNN models")
+print("   ✅ Visualizing filters and feature maps")
+print("   ✅ Evaluating CNN performance")
+print("   ✅ Comparing CNN vs ANN")
+print("   ✅ Saving and loading models")
+print("   ✅ Making predictions")
+
+print("\n🎯 CNN Architecture Summary:")
+print("   Conv2D(32, 3×3) → MaxPool(2×2)")
+print("   Conv2D(64, 3×3) → MaxPool(2×2)")
+print("   Conv2D(128, 3×3) → MaxPool(2×2)")
+print("   Flatten → Dense(128) → Dropout → Dense(10)")
+
+print("\n💡 Why CNN Works Better:")
+print("   • Learns spatial features automatically")
+print("   • Fewer parameters than ANN")
+print("   • Translation invariant")
+print("   • Works well with image data")
+
+print("\n🚀 Next Steps:")
+print("   • Try CIFAR-10 (color images, 10 classes)")
+print("   • Use transfer learning")
+print("   • Add data augmentation")
+print("   • Build a classifier for your own images")
+
+print("\n✅ Congratulations! You've built a CNN image classifier! 🖼️🚀")
