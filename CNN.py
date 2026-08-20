@@ -91,7 +91,7 @@ def create_cnn_model():
 
 # Create the model
 model = create_cnn_model()
-
+model.build(input_shape=(None, 28, 28, 1))
 print("✅ CNN Model created successfully!")
 model.summary()
 
