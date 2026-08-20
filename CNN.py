@@ -150,3 +150,21 @@ history = model.fit(
 
 training_time = time.time() - start_time
 print(f"\n✅ Training complete in {training_time:.2f} seconds!")
+# ========================================
+# PART 6: EVALUATE MODEL
+# ========================================
+
+print("\n" + "="*50)
+print("PART 6: EVALUATING MODEL")
+print("="*50)
+
+# Evaluate on test data
+test_loss, test_accuracy = model.evaluate(X_test_cnn, y_test_onehot, verbose=0)
+
+print(f"\n📊 Test Results:")
+print(f"   Test Loss: {test_loss:.4f}")
+print(f"   Test Accuracy: {test_accuracy:.4f} ({test_accuracy*100:.2f}%)")
+
+# Make predictions
+y_pred = model.predict(X_test_cnn)
+y_pred_classes = np.argmax(y_pred, axis=1)
