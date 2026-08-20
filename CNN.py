@@ -68,8 +68,11 @@ def create_cnn_model():
     """Create a CNN model for image classification"""
     
     model = tf.keras.Sequential([
+        # Explicit Input layer so model.input is always defined
+        tf.keras.Input(shape=(28, 28, 1)),
+
         # First Convolutional Block
-        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
         tf.keras.layers.MaxPooling2D((2, 2)),
         
         # Second Convolutional Block
