@@ -264,8 +264,14 @@ print("PART 10: VISUALIZING FEATURE MAPS")
 print("="*50)
 
 # Create a model that outputs feature maps
-layer_outputs = [layer.output for layer in model.layers[:4]]  # First 4 layers
-activation_model = tf.keras.Model(inputs=model.input, outputs=layer_outputs)
+# Build via the Functional API (bypasses model.input issues with Sequential models)
+inputs = tf.keras.Input(shape=(28, 28, 1))
+x = inputs
+layer_outputs = []
+for layer in model.layers[:4]:  # First 4 layers
+    x = layer(x)
+    layer_outputs.append(x)
+activation_model = tf.keras.Model(inputs=inputs, outputs=layer_outputs)
 
 # Pick a sample image
 sample_idx = np.random.randint(0, len(X_test))
