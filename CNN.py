@@ -168,3 +168,119 @@ print(f"   Test Accuracy: {test_accuracy:.4f} ({test_accuracy*100:.2f}%)")
 # Make predictions
 y_pred = model.predict(X_test_cnn)
 y_pred_classes = np.argmax(y_pred, axis=1)
+# ========================================
+# PART 7: VISUALIZE TRAINING HISTORY
+# ========================================
+
+print("\n" + "="*50)
+print("PART 7: TRAINING HISTORY")
+print("="*50)
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+fig.suptitle('CNN Training History', fontsize=14, fontweight='bold')
+
+# Loss
+axes[0].plot(history.history['loss'], label='Training Loss', linewidth=2)
+axes[0].plot(history.history['val_loss'], label='Validation Loss', linewidth=2)
+axes[0].set_title('Loss Over Epochs')
+axes[0].set_xlabel('Epoch')
+axes[0].set_ylabel('Loss')
+axes[0].legend()
+axes[0].grid(True, alpha=0.3)
+
+# Accuracy
+axes[1].plot(history.history['accuracy'], label='Training Accuracy', linewidth=2)
+axes[1].plot(history.history['val_accuracy'], label='Validation Accuracy', linewidth=2)
+axes[1].set_title('Accuracy Over Epochs')
+axes[1].set_xlabel('Epoch')
+axes[1].set_ylabel('Accuracy')
+axes[1].legend()
+axes[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+
+# ========================================
+# PART 8: CONFUSION MATRIX
+# ========================================
+
+print("\n" + "="*50)
+print("PART 8: CONFUSION MATRIX")
+print("="*50)
+
+# Compute confusion matrix
+cm = confusion_matrix(y_test, y_pred_classes)
+
+plt.figure(figsize=(10, 8))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+            xticklabels=range(10), yticklabels=range(10))
+plt.title('Confusion Matrix - CNN', fontsize=14, fontweight='bold')
+plt.xlabel('Predicted Digit')
+plt.ylabel('Actual Digit')
+plt.show()
+
+# Classification report
+print("\n📊 Classification Report:")
+print(classification_report(y_test, y_pred_classes, digits=3))
+
+# ========================================
+# PART 9: VISUALIZE FILTERS (Feature Maps)
+# ========================================
+
+print("\n" + "="*50)
+print("PART 9: VISUALIZING CNN FILTERS")
+print("="*50)
+
+# Get first convolutional layer weights
+conv_layer = model.layers[0]
+weights, biases = conv_layer.get_weights()
+
+# Normalize weights for visualization
+weights_normalized = (weights - weights.min()) / (weights.max() - weights.min())
+
+# Display first 8 filters
+fig, axes = plt.subplots(2, 4, figsize=(12, 6))
+fig.suptitle('CNN Filters (Feature Detectors)', fontsize=14, fontweight='bold')
+
+for i, ax in enumerate(axes.flat):
+    if i < 8:
+        filter_img = weights_normalized[:, :, 0, i]
+        ax.imshow(filter_img, cmap='gray')
+        ax.set_title(f'Filter {i+1}')
+        ax.axis('off')
+
+plt.tight_layout()
+plt.show()
+
+# ========================================
+# PART 10: VISUALIZE FEATURE MAPS
+# ========================================
+
+print("\n" + "="*50)
+print("PART 10: VISUALIZING FEATURE MAPS")
+print("="*50)
+
+# Create a model that outputs feature maps
+layer_outputs = [layer.output for layer in model.layers[:4]]  # First 4 layers
+activation_model = tf.keras.Model(inputs=model.input, outputs=layer_outputs)
+
+# Pick a sample image
+sample_idx = np.random.randint(0, len(X_test))
+sample_image = X_test_cnn[sample_idx:sample_idx+1]
+
+# Get activations
+activations = activation_model.predict(sample_image)
+
+# Display feature maps
+fig, axes = plt.subplots(4, 6, figsize=(12, 8))
+fig.suptitle(f'Feature Maps for Digit {y_test[sample_idx]}', fontsize=14, fontweight='bold')
+
+for i, (ax, activation) in enumerate(zip(axes.flat, activations)):
+    if i < len(activations):
+        layer_activation = activation[0, :, :, i % activation.shape[-1]]
+        ax.imshow(layer_activation, cmap='viridis')
+        ax.set_title(f'Map {i+1}')
+        ax.axis('off')
+
+plt.tight_layout()
+plt.show()
