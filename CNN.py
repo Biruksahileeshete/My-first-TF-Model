@@ -56,3 +56,97 @@ y_train_onehot = tf.keras.utils.to_categorical(y_train, 10)
 y_test_onehot = tf.keras.utils.to_categorical(y_test, 10)
 
 print(f"✅ Labels one-hot encoded: {y_train_onehot[0]}")
+# ========================================
+# PART 3: BUILD CNN MODEL
+# ========================================
+
+print("\n" + "="*50)
+print("PART 3: BUILDING CNN MODEL")
+print("="*50)
+
+def create_cnn_model():
+    """Create a CNN model for image classification"""
+    
+    model = tf.keras.Sequential([
+        # First Convolutional Block
+        tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
+        tf.keras.layers.MaxPooling2D((2, 2)),
+        
+        # Second Convolutional Block
+        tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+        tf.keras.layers.MaxPooling2D((2, 2)),
+        
+        # Third Convolutional Block
+        tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
+        tf.keras.layers.MaxPooling2D((2, 2)),
+        
+        # Flatten and Dense Layers
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(128, activation='relu'),
+        tf.keras.layers.Dropout(0.5),
+        tf.keras.layers.Dense(10, activation='softmax')
+    ])
+    
+    return model
+
+# Create the model
+model = create_cnn_model()
+
+print("✅ CNN Model created successfully!")
+model.summary()
+
+# ========================================
+# PART 4: COMPILE MODEL
+# ========================================
+
+print("\n" + "="*50)
+print("PART 4: COMPILING MODEL")
+print("="*50)
+
+model.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+print("✅ Model compiled with:")
+print("   Optimizer: Adam")
+print("   Loss: Categorical Crossentropy")
+print("   Metrics: Accuracy")
+
+# ========================================
+# PART 5: TRAIN MODEL
+# ========================================
+
+print("\n" + "="*50)
+print("PART 5: TRAINING CNN MODEL")
+print("="*50)
+
+# Callbacks for better training
+early_stopping = tf.keras.callbacks.EarlyStopping(
+    monitor='val_loss',
+    patience=3,
+    restore_best_weights=True
+)
+
+reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
+    monitor='val_loss',
+    factor=0.5,
+    patience=2,
+    min_lr=0.00001
+)
+
+start_time = time.time()
+
+print("🎯 Training started...")
+history = model.fit(
+    X_train_cnn, y_train_onehot,
+    epochs=20,
+    batch_size=64,
+    validation_split=0.2,
+    callbacks=[early_stopping, reduce_lr],
+    verbose=1
+)
+
+training_time = time.time() - start_time
+print(f"\n✅ Training complete in {training_time:.2f} seconds!")
