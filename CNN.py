@@ -356,3 +356,51 @@ if misclassified_count > 0:
     
     plt.tight_layout()
     plt.show()
+    # ========================================
+# PART 13: COMPARE CNN vs ANN
+# ========================================
+
+print("\n" + "="*50)
+print("PART 13: CNN vs ANN COMPARISON")
+print("="*50)
+
+# Build a simple ANN for comparison
+ann_model = tf.keras.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+ann_model.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Train ANN (fewer epochs)
+print("🎯 Training ANN for comparison...")
+ann_history = ann_model.fit(
+    X_train, y_train_onehot,
+    epochs=10,
+    batch_size=64,
+    validation_split=0.2,
+    verbose=0
+)
+
+# Evaluate ANN
+ann_loss, ann_accuracy = ann_model.evaluate(X_test, y_test_onehot, verbose=0)
+
+# Compare results
+print("\n📊 Model Comparison:")
+print("-" * 50)
+print(f"{'Metric':<20} {'CNN':<15} {'ANN':<15}")
+print("-" * 50)
+print(f"{'Test Accuracy':<20} {test_accuracy:.4f}{'':10} {ann_accuracy:.4f}")
+print(f"{'Parameters':<20} {model.count_params():,}{'':8} {ann_model.count_params():,}")
+print(f"{'Training Time':<20} {training_time:.1f}s{'':10} {time.time() - start_time:.1f}s")
+
+# Calculate improvement
+improvement = ((test_accuracy - ann_accuracy) / ann_accuracy) * 100
+print(f"\n📈 CNN is {improvement:.1f}% more accurate than ANN!")
+print("✅ CNN performs better because it understands spatial patterns!")
