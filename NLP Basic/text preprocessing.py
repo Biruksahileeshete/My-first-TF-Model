@@ -15,14 +15,36 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from nltk import pos_tag
 
-# Download required NLTK data (first time only)
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
-    nltk.download('stopwords')
-    nltk.download('wordnet')
-    nltk.download('averaged_perceptron_tagger')
+# ========================================
+# FIX: Download ALL required NLTK data
+# ========================================
+
+def download_nltk_resources():
+    """Download all required NLTK resources"""
+    resources = [
+        'punkt',
+        'punkt_tab',           # <-- THIS WAS MISSING!
+        'stopwords',
+        'wordnet',
+        'averaged_perceptron_tagger',
+        'omw-1.4'              # <-- Required for wordnet
+    ]
+    
+    for resource in resources:
+        try:
+            # Check if resource exists
+            if 'punkt' in resource:
+                nltk.data.find(f'tokenizers/{resource}')
+            else:
+                nltk.data.find(f'corpora/{resource}')
+            print(f"✅ {resource} already available")
+        except LookupError:
+            print(f"⬇️ Downloading {resource}...")
+            nltk.download(resource, quiet=True)
+            print(f"✅ {resource} downloaded")
+
+# Run the download
+download_nltk_resources()
 
 # ========================================
 # PAGE CONFIGURATION
