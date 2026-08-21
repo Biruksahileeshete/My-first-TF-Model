@@ -113,15 +113,3 @@ requirements.txt
 README.md
 ```
 
-### ❌ Don't Commit
-```
-venv/
-.venv/
-.vscode/
-__pycache__/
-*.pyc
-```
-
----
-
-**Happy Learning! 🚀**
