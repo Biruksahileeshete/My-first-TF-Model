@@ -458,4 +458,4 @@ st.caption("😊 Sentiment Analysis App v1.0 - Built with Streamlit, NLTK, and T
 # RUN THE APP
 # ========================================
 
-# To run: streamlit run sentiment_analysis_app.py
+# To run: streamlit run sentiment_analysis_app.pystreamlit run "sentiment_analysis_app.py"
